@@ -1,7 +1,5 @@
 <template>
   <div class="searching">
-  
-
     <div class="block">
       <!-- <input
         class="form-control"
@@ -9,11 +7,13 @@
         placeholder="模糊搜尋國名"
       /> -->
       <div>
-        <div class="table tbA" v-if="son_message != ''">
+        <div class="table tbA">
           <table>
             <thead>
-              <tr v-for="(item, index) in filterSearch" :key="index">
-                <td>{{ item.name }}</td>
+              <tr v-for="(item, index) in dataList" :key="index">
+                <td @click="nameClick(dataAll[index].capital)">
+                  {{ item.name }}
+                </td>
                 <td>{{ item.alpha2Code }}</td>
                 <td>{{ item.alpha3Code }}</td>
                 <td>{{ item.demonym }}</td>
@@ -22,28 +22,6 @@
           </table>
         </div>
       </div>
-    </div>
-    <div class="table tbB" v-if="son_message == ''">
-      <table>
-        <thead>
-          <tr class="header" v-for="(item, index) in dataAll" :key="index.name">
-            <td>
-              {{ dataAll[index].name }}
-            </td>
-            <td>
-              {{ dataAll[index].alpha2Code }}
-            </td>
-            <td>
-              {{ dataAll[index].alpha3Code }}
-            </td>
-            <td>
-              {{ dataAll[index].demonym }}
-            </td>
-          </tr>
-
-          <tr></tr>
-        </thead>
-      </table>
     </div>
   </div>
 </template>
@@ -60,7 +38,6 @@ export default {
   data() {
     return {
       dataAll: [],
-     
     };
   },
   name: "searching",
@@ -78,22 +55,31 @@ export default {
         })
         .catch((err) => {});
     },
+    nameClick(data) {
+      console.log("nameClick:", data);
+      this.$router.push("/detail/" + data);
+    },
   },
   created() {
     this.getCountriesinfos();
   },
   computed: {
-    filterSearch() {
-      return this.dataAll.filter((item, index, array) => {
-        // item.name.indexOf('this.message')
-        // console.log( item.name.indexOf('a'));
-        if (
-          item.name.indexOf(this.son_message) !== -1 ||
-          item.demonym.indexOf(this.son_message) !== -1
-        ) {
-          return true;
-        }
-      });
+    dataList() {
+      if (this.son_message != "") {
+        return this.dataAll.filter((item, index, array) => {
+          // item.name.indexOf('this.message')
+          // console.log( item.name.indexOf('a'));
+          if (
+            item.name.toLowerCase().indexOf(this.son_message.toLowerCase()) !== -1 ||
+            item.demonym.toLowerCase().indexOf(this.son_message.toLowerCase()) !== -1
+          ) {
+            return true;
+          }
+        });
+      }
+      else{
+        return this.dataAll;
+      }
     },
     // selectMatchItem(lists, keyWord) {
     //   let resArr = this.dataAll;
