@@ -72,9 +72,11 @@ export default {
     return {
       dataAll: [],
       message: "",
+      test: [10, 20, 30, 40, 50],
+      test2: ["jim", "test", "cat", "dog", "jimmy"],
+      test3: ["jim", "jim", "test", "cat", "dog", "jimmy"],
     };
   },
-
   components: {
     HelloWorld,
     countrySearch,
@@ -93,8 +95,19 @@ export default {
   },
   created() {
     this.getCountriesinfos();
+
+    document.title = this.$route.meta.title;
+    document.description = this.$route.meta.description;
   },
   computed: {
+    formatData() {
+      return this.test.map((it, index) => {
+        return {
+          id: it,
+          name: this.test2[index],
+        };
+      });
+    },
     filterSearch() {
       return this.dataAll.filter((item, index, array) => {
         // item.name.indexOf('this.message')
@@ -119,6 +132,15 @@ export default {
     //   return resArr;
     // },
   },
+  //   mounted: function () {
+  //   var routeInstance = this.$route;
+  //   this.createTitleDesc(routeInstance);
+  // },
+  // watch: {
+  //   $route(routeInstance, from) {
+  //     this.createTitleDesc(routeInstance);
+  //   },
+  // },
 };
 </script>
 
